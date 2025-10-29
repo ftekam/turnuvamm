@@ -101,19 +101,17 @@
 
 <script>
 /* --------- Ayarlar / Anahtarlar ---------- */
-const STORAGE_KEY = 'savedTournaments_v1';   // tamamlanmışlar
-const AUTOSAVE_KEY = 'ongoingTournament_v1'; // devam eden turnuva
+const STORAGE_KEY = 'savedTournaments_v1';
+const AUTOSAVE_KEY = 'ongoingTournament_v1';
 const playerPhotos = {"Faruk":"Faruk.png","Rıza":"Rıza.png","Hakan":"Hakan.png","Salih":"Salih.png","Hidayet":"Hidayet.png","Ergün":"Ergün.png","İsmail":"İsmail.png","Uğur":"default.png"};
 
-/* --------- Veri yapıları ---------- */
 const teams = [];
 let weeksMatches = [];
 let currentWeek = 0;
 const matchResults = {};
 
-/* --------- Sınıf ---------- */
 class Team {
-    constructor(playerName, teamName) {
+    constructor(playerName, teamName){
         this.playerName = playerName;
         this.teamName = teamName;
         this.played = 0;
@@ -127,7 +125,7 @@ class Team {
     get goalDifference(){ return this.goalsFor - this.goalsAgainst; }
 }
 
-/* --------- Butonlar / Eventler ---------- */
+/* --------- Butonlar ---------- */
 document.getElementById("addTeamBtn").onclick = () => {
     const player = document.getElementById("playerName").value.trim();
     const team = document.getElementById("teamName").value.trim();
@@ -140,7 +138,7 @@ document.getElementById("addTeamBtn").onclick = () => {
 };
 
 document.getElementById("clearTeamsBtn").onclick = () => {
-    if(confirm("Tüm takımları temizlemek istiyor musun?")) {
+    if(confirm("Tüm takımları temizlemek istiyor musun?")){
         teams.length = 0;
         updateTeamList();
         clearAutoState();
@@ -170,11 +168,11 @@ document.getElementById("archiveClearBtn").onclick = () => {
     }
 };
 
-/* --------- Görüntüleme güncellemeleri ---------- */
+/* --------- Görüntüleme ---------- */
 function updateTeamList(){
     const ul = document.getElementById("teamList");
     ul.innerHTML = '';
-    teams.forEach(t => {
+    teams.forEach(t=>{
         const li = document.createElement("li");
         const photoUrl = playerPhotos[t.playerName] || 'default.png';
         li.innerHTML = `<img src="${photoUrl}" alt="${t.playerName}"><span>${t.playerName} - ${t.teamName}</span>`;
@@ -187,7 +185,7 @@ function showWeek(week){
     document.getElementById("weekTitle").textContent = `Hafta ${week+1} / Toplam ${weeksMatches.length} Hafta`;
     const matchList = document.getElementById("matchList");
     matchList.innerHTML = '';
-    weeksMatches[week].forEach((m, i) => {
+    weeksMatches[week].forEach((m,i)=>{
         const div = document.createElement("div");
         div.className = "match-card";
         const key = `${week}-${i}`;
@@ -206,177 +204,179 @@ function showWeek(week){
 
 /* --------- Lig & Fikstür ---------- */
 function resetStats(){
-    teams.forEach(t => {
-        t.played = t.won = t.draw = t.lost = t.goalsFor = t.goalsAgainst = 0;
-    });
+    teams.forEach(t => t.played=t.won=t.draw=t.lost=t.goalsFor=t.goalsAgainst=0);
+    weeksMatches = [];
     currentWeek = 0;
-    matchResults = {};
+    for(const k in matchResults) delete matchResults[k];
+    document.getElementById("championBox").style.display = "none";
+    document.getElementById("matchSection").style.display = "none";
+    updateStandings();
 }
 
 function prepareWeeklyMatches(){
-    weeksMatches = [];
-    const shuffled = [...teams].sort(()=>Math.random()-0.5);
-    const numWeeks = teams.length - 1;
-    for(let w=0; w<numWeeks; w++){
-        const week = [];
-        for(let i=0;i<Math.floor(shuffled.length/2);i++){
-            week.push([shuffled[i], shuffled[shuffled.length-i-1]]);
+    weeksMatches=[];
+    const n = teams.length;
+    let rotation = teams.slice();
+    if(n%2!==0) rotation.push(new Team("Bay","(Bay)"));
+    const total = rotation.length;
+    for(let week=0; week<total-1; week++){
+        const matches=[];
+        for(let i=0;i<total/2;i++){
+            const home=rotation[i], away=rotation[total-1-i];
+            if(home.teamName!=="(Bay)" && away.teamName!=="(Bay)") matches.push([home, away]);
         }
-        weeksMatches.push(week);
+        weeksMatches.push(matches);
+        rotation.splice(1,0,rotation.pop());
     }
+    const secondLegs = weeksMatches.map(week=>week.map(([h,a])=>[a,h]));
+    weeksMatches = weeksMatches.concat(secondLegs);
 }
 
-function submitMatch(week, idx){
-    const m = weeksMatches[week][idx];
-    const inputs = document.getElementsByClassName("match-card")[idx].getElementsByTagName("input");
-    const aGoals = parseInt(inputs[0].value)||0;
-    const bGoals = parseInt(inputs[1].value)||0;
+/* --------- Maç kaydetme ---------- */
+function submitMatch(week,matchIndex){
+    const matchDiv=document.getElementById("matchList").children[matchIndex];
+    const goalsA=parseInt(matchDiv.querySelector(".scoreA").value);
+    const goalsB=parseInt(matchDiv.querySelector(".scoreB").value);
+    if(isNaN(goalsA)||isNaN(goalsB)){ alert("Gol girin!"); return; }
 
-    matchResults[`${week}-${idx}`] = {homeGoals:aGoals, awayGoals:bGoals};
-    // istatistik güncelle
-    m[0].played++; m[1].played++;
-    m[0].goalsFor += aGoals; m[0].goalsAgainst += bGoals;
-    m[1].goalsFor += bGoals; m[1].goalsAgainst += aGoals;
-    if(aGoals>bGoals){ m[0].won++; m[1].lost++; }
-    else if(aGoals<bGoals){ m[0].lost++; m[1].won++; }
-    else{ m[0].draw++; m[1].draw++; }
+    const teamA=weeksMatches[week][matchIndex][0];
+    const teamB=weeksMatches[week][matchIndex][1];
 
-    updateStandings();
+    teamA.goalsFor+=goalsA; teamA.goalsAgainst+=goalsB;
+    teamB.goalsFor+=goalsB; teamB.goalsAgainst+=goalsA;
+    teamA.played++; teamB.played++;
+
+    if(goalsA>goalsB){ teamA.won++; teamB.lost++; }
+    else if(goalsB>goalsA){ teamB.won++; teamA.lost++; }
+    else { teamA.draw++; teamB.draw++; }
+
+    matchResults[`${week}-${matchIndex}`]={homeGoals:goalsA, awayGoals:goalsB, homePlayer:teamA.playerName, awayPlayer:teamB.playerName, homeTeam:teamA.teamName, awayTeam:teamB.teamName, week:week+1};
+
     saveAutoState();
 
-    // haftanın tamamlanıp tamamlanmadığını kontrol
-    const allDone = weeksMatches[week].every((_,i)=>matchResults[`${week}-${i}`]);
-    if(allDone){
-        currentWeek++;
-        if(currentWeek<weeksMatches.length) showWeek(currentWeek);
-        else showChampion();
+    matchDiv.style.display="none";
+    const weekDivs = Array.from(document.getElementById("matchList").children);
+    if(weekDivs.every(d=>d.style.display==="none")){
+        updateStandings();
+        if(currentWeek<weeksMatches.length-1){
+            currentWeek++;
+            showWeek(currentWeek);
+        } else { showChampion(); }
     }
 }
 
 function updateStandings(){
-    const tbody = document.querySelector("#pointsTable tbody");
-    tbody.innerHTML = '';
-    const sorted = [...teams].sort((a,b)=>{
-        if(b.points !== a.points) return b.points - a.points;
-        return b.goalDifference - a.goalDifference;
-    });
+    const tbody=document.querySelector("#pointsTable tbody");
+    tbody.innerHTML='';
+    const sorted=[...teams].sort((a,b)=>b.points-a.points || b.goalDifference-a.goalDifference || b.goalsFor-a.goalsFor);
     sorted.forEach((t,i)=>{
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${i+1}</td><td>${t.teamName}</td><td>${t.points}</td><td>${t.played}</td><td>${t.won}</td><td>${t.draw}</td><td>${t.lost}</td><td>${t.goalsFor}</td><td>${t.goalsAgainst}</td><td>${t.goalDifference}</td>`;
+        const tr=document.createElement("tr");
+        tr.innerHTML=`<td>${i+1}</td><td>${t.playerName} (${t.teamName})</td><td>${t.points}</td><td>${t.played}</td><td>${t.won}</td><td>${t.draw}</td><td>${t.lost}</td><td>${t.goalsFor}</td><td>${t.goalsAgainst}</td><td>${t.goalDifference}</td>`;
         tbody.appendChild(tr);
     });
 }
 
 /* --------- Şampiyon ---------- */
 function showChampion(){
-    document.getElementById("championBox").style.display = "block";
-    const winner = teams.reduce((a,b)=>a.points>=b.points?a:b);
-    const img = playerPhotos[winner.playerName]||'default.png';
-    document.getElementById("championInfo").innerHTML = `<img src="${img}" class="champion-photo">${winner.playerName} - ${winner.teamName}`;
-    spawnConfetti();
-    saveTournament();
+    const sorted=[...teams].sort((a,b)=>b.points-a.points || b.goalDifference-a.goalDifference || b.goalsFor-a.goalsFor);
+    const champion=sorted[0];
+    const photoUrl=playerPhotos[champion.playerName] || 'default.png';
+    document.getElementById("championInfo").innerHTML=`<img src="${photoUrl}" alt="${champion.playerName}" class="champion-photo"> ${champion.playerName} (${champion.teamName})`;
+    document.getElementById("championBox").style.display="block";
+    document.getElementById("matchSection").style.display="none";
+    triggerConfetti(80);
+
+    const tournamentData={
+        id:Date.now(),
+        date:new Date().toISOString(),
+        teams:teams.map(t=>({playerName:t.playerName,teamName:t.teamName,played:t.played,won:t.won,draw:t.draw,lost:t.lost,goalsFor:t.goalsFor,goalsAgainst:t.goalsAgainst,points:t.points,goalDifference:t.goalDifference})),
+        champion:{playerName:champion.playerName,teamName:champion.teamName}
+    };
+    saveTournament(tournamentData);
     clearAutoState();
 }
 
-/* --------- Eski Turnuvalar ---------- */
-function saveTournament(){
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    arr.push({
-        date: new Date().toLocaleString(),
-        teams: teams.map(t=>({playerName:t.playerName, teamName:t.teamName, points:t.points})),
-        winner: teams.reduce((a,b)=>a.points>=b.points?a:b)
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+/* --------- Kayıt / Yükleme ---------- */
+function saveTournament(data){
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    saved.push(data);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));
 }
 
 function toggleSavedSection(){
-    const sec = document.getElementById("savedSection");
-    sec.style.display = sec.style.display==='none'?'block':'none';
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    const ul = document.getElementById("savedList");
-    ul.innerHTML = '';
-    arr.forEach((t,i)=>{
-        const li = document.createElement("li");
-        li.innerHTML = `<span>${t.date} - Kazanan: ${t.winner.playerName}</span> <button onclick="showSavedDetails(${i})">Detay</button>`;
-        ul.appendChild(li);
-    });
+    const sec=document.getElementById("savedSection");
+    sec.style.display=sec.style.display==="none"?"block":"none";
+    if(sec.style.display==="block"){
+        const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+        const ul=document.getElementById("savedList");
+        ul.innerHTML='';
+        saved.forEach(t=>{
+            const li=document.createElement("li");
+            const dt=new Date(t.date);
+            li.innerHTML=`<span>${dt.toLocaleString()} - ${t.champion.playerName} (${t.champion.teamName})</span><button onclick='showSavedTournament(${t.id})'>Göster</button>`;
+            ul.appendChild(li);
+        });
+    }
 }
 
-function showSavedDetails(idx){
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    const t = arr[idx];
-    let html = '<ul>';
-    t.teams.forEach(team=>{
-        html += `<li>${team.playerName} - ${team.teamName} - ${team.points} Puan</li>`;
-    });
-    html += '</ul>';
-    document.getElementById("savedDetails").innerHTML = html;
+function showSavedTournament(id){
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    const t=saved.find(x=>x.id===id);
+    if(t){
+        const details=document.getElementById("savedDetails");
+        let html='<table><tr><th>#</th><th>Oyuncu</th><th>Takım</th><th>Puan</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th><th>AV</th></tr>';
+        t.teams.forEach((tm,i)=>{
+            html+=`<tr><td>${i+1}</td><td>${tm.playerName}</td><td>${tm.teamName}</td><td>${tm.points}</td><td>${tm.played}</td><td>${tm.won}</td><td>${tm.draw}</td><td>${tm.lost}</td><td>${tm.goalsFor}</td><td>${tm.goalsAgainst}</td><td>${tm.goalDifference}</td></tr>`;
+        });
+        html+='</table>';
+        details.innerHTML=html;
+    }
 }
 
-/* --------- Kaydetme / Yükleme (sorun çözüldü) ---------- */
+/* --------- Confetti ---------- */
+function triggerConfetti(count){
+    const container=document.getElementById("confettiContainer");
+    for(let i=0;i<count;i++){
+        const conf=document.createElement("div");
+        conf.className='confetti';
+        conf.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`;
+        conf.style.left=Math.random()*100+'%';
+        conf.style.animationDuration=(Math.random()*3+2)+'s';
+        conf.style.width=(Math.random()*8+4)+'px';
+        conf.style.height=(Math.random()*8+4)+'px';
+        container.appendChild(conf);
+        setTimeout(()=>container.removeChild(conf),5000);
+    }
+}
+
+/* --------- Otomatik Kayıt ---------- */
 function saveAutoState(){
-    const data = {
-        currentWeek,
-        weeksMatches,
-        teams: teams.map(t=>({...t})),
-        matchResults
-    };
-    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+    const data={teams,weeksMatches,currentWeek,matchResults};
+    localStorage.setItem(AUTOSAVE_KEY,JSON.stringify(data));
 }
 
 function loadAutoState(){
-    const raw = localStorage.getItem(AUTOSAVE_KEY);
-    if(!raw) return false;
-    try{
-        const data = JSON.parse(raw);
-        teams.length = 0;
-        for(const k in matchResults) delete matchResults[k];
-        weeksMatches = data.weeksMatches.map(week => week.map(pair => {
-            const home = new Team(pair[0].playerName, pair[0].teamName);
-            const away = new Team(pair[1].playerName, pair[1].teamName);
-            Object.assign(home, pair[0]);
-            Object.assign(away, pair[1]);
-            return [home, away];
-        }));
-        data.teams.forEach(t=>{
-            const team = teams.find(tt => tt.playerName===t.playerName && tt.teamName===t.teamName);
-            if(team){
-                Object.assign(team,t);
-            } else teams.push(new Team(t.playerName, t.teamName));
-        });
-        for(const k in data.matchResults) matchResults[k] = data.matchResults[k];
-        currentWeek = data.currentWeek !== undefined ? data.currentWeek : 0;
+    const data=JSON.parse(localStorage.getItem(AUTOSAVE_KEY)||'null');
+    if(data){
+        teams.length=0;
+        data.teams.forEach(t=>teams.push(Object.assign(new Team(), t)));
+        weeksMatches=data.weeksMatches;
+        currentWeek=data.currentWeek;
+        for(const k in data.matchResults) matchResults[k]=data.matchResults[k];
         updateTeamList();
-        updateStandings();
-        if(currentWeek<weeksMatches.length) showWeek(currentWeek);
-        return true;
-    } catch(e){ console.error(e); return false; }
+        if(currentWeek<weeksMatches.length){
+            document.getElementById("startTournamentBtn").style.display="none";
+            document.getElementById("showSavedBtn").style.display="none";
+            showWeek(currentWeek);
+        }
+    }
 }
 
 function clearAutoState(){ localStorage.removeItem(AUTOSAVE_KEY); }
 
-/* --------- Confetti ---------- */
-function spawnConfetti(){
-    const container = document.getElementById("confettiContainer");
-    for(let i=0;i<100;i++){
-        const c = document.createElement("div");
-        c.className = 'confetti';
-        c.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 60%)`;
-        c.style.left = `${Math.random()*100}%`;
-        c.style.top = `${-10 + Math.random()*10}vh`;
-        c.style.animationDuration = `${2+Math.random()*3}s`;
-        container.appendChild(c);
-        setTimeout(()=>c.remove(),5000);
-    }
-}
-
-/* --------- Başlangıçta yükle ---------- */
-window.onload = () => {
-    loadAutoState();
-};
+/* --------- Başlangıç ---------- */
+loadAutoState();
+updateStandings();
 </script>
 </body>
 </html>
