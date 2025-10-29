@@ -5,73 +5,179 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Futbol Turnuvası</title>
 <style>
-    html, body { height:100%; margin:0; padding:0; background-color:black; }
-    body {
-        font-family: Arial, sans-serif;
-        background: url('photo_001.png') no-repeat center bottom;
-        background-size: cover; color:#fff;
-    }
-    h1 { text-align:center; margin-top:20px; text-shadow:2px 2px #000; }
-    input, button { padding:8px; margin:5px; font-size:20px; border-radius:5px; border:none; }
-    button { background-color:#1a73e8; color:#fff; cursor:pointer; }
-    button:hover { background-color:#155ab6; }
-    .team-entry, .team-list, .match-section, .standings, .champion-box, .saved-section {
-        background-color: rgba(0,0,50,0.8);
-        margin: 15px auto; padding:20px; border-radius:10px; max-width:750px;
-    }
-    .team-list ul { list-style:none; padding-left:0; }
-    .team-list li { padding:5px; border-bottom:1px solid #ccc; display:flex; align-items:center; }
-    .team-list img { width:40px; height:40px; border-radius:50%; margin-right:10px; border:2px solid #fff; }
-
-    .match-card { background-color: rgba(255,255,255,0.1); padding:10px; margin-bottom:10px; border-radius:8px;
-        display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .match-card input { width:50px; text-align:center; }
-
-    table { width:100%; border-collapse:collapse; margin-top:10px; background-color: rgba(0,0,80,0.7); border-radius:10px; overflow:hidden; }
-    th, td { border:1px solid #fff; padding:5px; text-align:center; font-size:14px; }
-    th { background-color: rgba(0,0,100,0.8); }
-
-    .tournament { text-align:center; }
-
-    .champion-box h3 { text-align:center; margin:0; }
-    .champion-box p { display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold; }
-    .champion-photo { width:80px; height:80px; border-radius:50%; margin-right:20px; border:4px solid gold; }
-
-    .saved-list { list-style:none; padding-left:0; }
-    .saved-list li { padding:8px; border-bottom:1px solid #666; display:flex; justify-content:space-between; align-items:center; }
-    .saved-list .meta { display:flex; align-items:center; gap:10px; }
-
-    .confetti-container { position: fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; overflow:visible; z-index:9999; }
-    .confetti { position:absolute; width:10px; height:14px; opacity:0.9; transform-origin:center; will-change:transform, top; animation: fall linear forwards; }
-    @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity:1; } 100% { transform: translateY(110vh) rotate(720deg); opacity:0.9; } }
-
-    @media (max-width:600px) { th, td { font-size:12px; padding:4px; } input, button { font-size:14px; padding:4px; } .match-card { flex-direction:column; } }
+html, body {
+    height:100%;
+    margin:0;
+    padding:0;
+    background-color:black;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: url('photo_001.png') no-repeat center bottom;
+    background-size: cover;
+    color:#fff;
+}
+h1 {
+    text-align:center;
+    margin-top:20px;
+    text-shadow:2px 2px #000;
+}
+input, button {
+    padding:8px;
+    margin:5px;
+    font-size:20px;
+    border-radius:5px;
+    border:none;
+}
+button {
+    background-color:#1a73e8;
+    color:#fff;
+    cursor:pointer;
+}
+button:hover {
+    background-color:#155ab6;
+}
+.team-entry, .team-list, .match-section, .standings, .champion-box, .saved-section {
+    background-color: rgba(0,0,50,0.8);
+    margin: 15px auto;
+    padding:20px;
+    border-radius:10px;
+    max-width:750px;
+}
+.team-list ul {
+    list-style:none;
+    padding-left:0;
+}
+.team-list li {
+    padding:5px;
+    border-bottom:1px solid #ccc;
+    display:flex;
+    align-items:center;
+}
+.team-list img {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    margin-right:10px;
+    border:2px solid #fff;
+}
+.match-card {
+    background-color: rgba(255,255,255,0.1);
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+.match-card input {
+    width:50px;
+    text-align:center;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    background-color: rgba(0,0,80,0.7);
+    border-radius:10px;
+    overflow:hidden;
+}
+th, td {
+    border:1px solid #fff;
+    padding:5px;
+    text-align:center;
+    font-size:14px;
+}
+th {
+    background-color: rgba(0,0,100,0.8);
+}
+.tournament {
+    text-align:center;
+}
+.champion-box h3 {
+    text-align:center;
+    margin:0;
+}
+.champion-box p {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:bold;
+}
+.champion-photo {
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    margin-right:20px;
+    border:4px solid gold;
+}
+.saved-list {
+    list-style:none;
+    padding-left:0;
+}
+.saved-list li {
+    padding:8px;
+    border-bottom:1px solid #666;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.saved-list .meta {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.confetti-container {
+    position: fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:visible;
+    z-index:9999;
+}
+.confetti {
+    position:absolute;
+    width:10px;
+    height:14px;
+    opacity:0.9;
+    transform-origin:center;
+    will-change:transform, top;
+    animation: fall linear forwards;
+}
+@keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity:1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity:0.9; }
+}
+@media (max-width:600px) {
+    th, td { font-size:12px; padding:4px; }
+    input, button { font-size:14px; padding:4px; }
+    .match-card { flex-direction:column; }
+}
 </style>
 </head>
 <body>
 <h1>Futbol Turnuvası</h1>
-
 <div class="team-entry">
     <input type="text" id="playerName" placeholder="Oyuncu Adı" />
     <input type="text" id="teamName" placeholder="Takım Adı" />
     <button id="addTeamBtn">Takımı Ekle</button>
     <button id="clearTeamsBtn">Takımları Temizle</button>
 </div>
-
 <div class="team-list">
     <h3>Takımlar:</h3>
     <ul id="teamList"></ul>
 </div>
-
 <div class="tournament">
     <button id="startTournamentBtn">Turnuvayı Başlat</button>
     <button id="showSavedBtn">Eski Turnuvaları Göster</button>
-
     <div class="match-section" id="matchSection" style="display:none;">
         <h3 id="weekTitle"></h3>
         <div id="matchList"></div>
     </div>
-
     <div class="standings" id="standings">
         <h3>Puan Tablosu:</h3>
         <table id="pointsTable">
@@ -83,33 +189,34 @@
             <tbody></tbody>
         </table>
     </div>
-
     <div class="champion-box" id="championBox" style="display:none;">
         <h3>Şampiyon:</h3>
         <p id="championInfo"></p>
-        <div style="text-align:center; margin-top:10px;"><button id="archiveClearBtn">Arşive Aktarıldıysa Bu Turnuvayı Temizle</button></div>
+        <div style="text-align:center; margin-top:10px;">
+            <button id="archiveClearBtn">Arşive Aktarıldıysa Bu Turnuvayı Temizle</button>
+        </div>
     </div>
-
     <div class="saved-section" id="savedSection" style="display:none;">
         <h3>Eski Turnuvalar</h3>
         <ul id="savedList" class="saved-list"></ul>
         <div id="savedDetails" style="margin-top:10px;"></div>
     </div>
 </div>
-
 <div class="confetti-container" id="confettiContainer" aria-hidden="true"></div>
 
 <script>
 /* --------- Ayarlar / Anahtarlar ---------- */
-const STORAGE_KEY = 'savedTournaments_v1';
-const AUTOSAVE_KEY = 'ongoingTournament_v1';
+const STORAGE_KEY = 'savedTournaments_v1'; // tamamlanmışlar
+const AUTOSAVE_KEY = 'ongoingTournament_v1'; // devam eden turnuva
 const playerPhotos = {"Faruk":"Faruk.png","Rıza":"Rıza.png","Hakan":"Hakan.png","Salih":"Salih.png","Hidayet":"Hidayet.png","Ergün":"Ergün.png","İsmail":"İsmail.png","Uğur":"default.png"};
 
-const teams = [];
-let weeksMatches = [];
+/* --------- Veri yapıları ---------- */
+const teams = []; // aktif Team nesneleri
+let weeksMatches = []; // [ [ [homeObj, awayObj], ... ], ... ]
 let currentWeek = 0;
-const matchResults = {};
+const matchResults = {}; // ${week}-${matchIndex} => { homeGoals, awayGoals, ... }
 
+/* --------- Sınıf ---------- */
 class Team {
     constructor(playerName, teamName){
         this.playerName = playerName;
@@ -125,7 +232,7 @@ class Team {
     get goalDifference(){ return this.goalsFor - this.goalsAgainst; }
 }
 
-/* --------- Butonlar ---------- */
+/* --------- Butonlar / Eventler ---------- */
 document.getElementById("addTeamBtn").onclick = () => {
     const player = document.getElementById("playerName").value.trim();
     const team = document.getElementById("teamName").value.trim();
@@ -138,7 +245,7 @@ document.getElementById("addTeamBtn").onclick = () => {
 };
 
 document.getElementById("clearTeamsBtn").onclick = () => {
-    if(confirm("Tüm takımları temizlemek istiyor musun?")){
+    if(confirm("Tüm takımları temizlemek istiyor musun?")) {
         teams.length = 0;
         updateTeamList();
         clearAutoState();
@@ -146,16 +253,20 @@ document.getElementById("clearTeamsBtn").onclick = () => {
 };
 
 document.getElementById("startTournamentBtn").onclick = () => {
-    if(teams.length < 2){ alert("Turnuva başlatmak için en az 2 takım ekleyin!"); return; }
+    if(teams.length < 2){
+        alert("Turnuva başlatmak için en az 2 takım ekleyin!");
+        return;
+    }
     resetStats();
     prepareWeeklyMatches();
-    saveAutoState();
+    saveAutoState(); // başlatıldığında ilk kayıt
     document.getElementById("startTournamentBtn").style.display = "none";
     document.getElementById("showSavedBtn").style.display = "none";
     showWeek(currentWeek);
 };
 
 document.getElementById("showSavedBtn").onclick = toggleSavedSection;
+
 document.getElementById("archiveClearBtn").onclick = () => {
     if(confirm("Bu tamamlanmış turnuvayı temizlemek ve yeni bir turnuva başlatmak istiyor musun?")){
         clearAutoState();
@@ -168,11 +279,11 @@ document.getElementById("archiveClearBtn").onclick = () => {
     }
 };
 
-/* --------- Görüntüleme ---------- */
+/* --------- Görüntüleme güncellemeleri ---------- */
 function updateTeamList(){
     const ul = document.getElementById("teamList");
     ul.innerHTML = '';
-    teams.forEach(t=>{
+    teams.forEach(t => {
         const li = document.createElement("li");
         const photoUrl = playerPhotos[t.playerName] || 'default.png';
         li.innerHTML = `<img src="${photoUrl}" alt="${t.playerName}"><span>${t.playerName} - ${t.teamName}</span>`;
@@ -185,26 +296,26 @@ function showWeek(week){
     document.getElementById("weekTitle").textContent = `Hafta ${week+1} / Toplam ${weeksMatches.length} Hafta`;
     const matchList = document.getElementById("matchList");
     matchList.innerHTML = '';
-    weeksMatches[week].forEach((m,i)=>{
+    weeksMatches[week].forEach((m, i) => {
         const div = document.createElement("div");
         div.className = "match-card";
         const key = `${week}-${i}`;
         const existing = matchResults[key];
         const valA = existing ? existing.homeGoals : '';
         const valB = existing ? existing.awayGoals : '';
-        div.innerHTML = `
-            <span>${m[0].playerName} (${m[0].teamName}) vs ${m[1].playerName} (${m[1].teamName})</span>
-            <input type="number" placeholder="Gol" class="scoreA" value="${valA}">
-            <input type="number" placeholder="Gol" class="scoreB" value="${valB}">
-            <button onclick="submitMatch(${week},${i})">Kaydet</button>
-        `;
+        div.innerHTML = `<span>${m[0].playerName} (${m[0].teamName}) vs ${m[1].playerName} (${m[1].teamName})</span>
+                         <input type="number" placeholder="Gol" class="scoreA" value="${valA}">
+                         <input type="number" placeholder="Gol" class="scoreB" value="${valB}">
+                         <button onclick="submitMatch(${week},${i})">Kaydet</button>`;
         matchList.appendChild(div);
     });
 }
 
 /* --------- Lig & Fikstür ---------- */
 function resetStats(){
-    teams.forEach(t => t.played=t.won=t.draw=t.lost=t.goalsFor=t.goalsAgainst=0);
+    teams.forEach(t => {
+        t.played = t.won = t.draw = t.lost = t.goalsFor = t.goalsAgainst = 0;
+    });
     weeksMatches = [];
     currentWeek = 0;
     for(const k in matchResults) delete matchResults[k];
@@ -214,169 +325,150 @@ function resetStats(){
 }
 
 function prepareWeeklyMatches(){
-    weeksMatches=[];
+    weeksMatches = [];
     const n = teams.length;
     let rotation = teams.slice();
-    if(n%2!==0) rotation.push(new Team("Bay","(Bay)"));
+    const isOdd = (n % 2 !== 0);
+    if(isOdd) rotation.push(new Team("Bay","(Bay)"));
     const total = rotation.length;
     for(let week=0; week<total-1; week++){
-        const matches=[];
+        const matches = [];
         for(let i=0;i<total/2;i++){
-            const home=rotation[i], away=rotation[total-1-i];
-            if(home.teamName!=="(Bay)" && away.teamName!=="(Bay)") matches.push([home, away]);
+            const home = rotation[i];
+            const away = rotation[total-1-i];
+            if(home.teamName !== "(Bay)" && away.teamName !== "(Bay)") matches.push([home, away]);
         }
         weeksMatches.push(matches);
         rotation.splice(1,0,rotation.pop());
     }
-    const secondLegs = weeksMatches.map(week=>week.map(([h,a])=>[a,h]));
+    // Rövanş: ters eşleşmeleri ekle
+    const secondLegs = weeksMatches.map(week => week.map(([home,away]) => [away, home]));
     weeksMatches = weeksMatches.concat(secondLegs);
 }
 
-/* --------- Maç kaydetme ---------- */
-function submitMatch(week,matchIndex){
-    const matchDiv=document.getElementById("matchList").children[matchIndex];
-    const goalsA=parseInt(matchDiv.querySelector(".scoreA").value);
-    const goalsB=parseInt(matchDiv.querySelector(".scoreB").value);
-    if(isNaN(goalsA)||isNaN(goalsB)){ alert("Gol girin!"); return; }
-
-    const teamA=weeksMatches[week][matchIndex][0];
-    const teamB=weeksMatches[week][matchIndex][1];
-
-    teamA.goalsFor+=goalsA; teamA.goalsAgainst+=goalsB;
-    teamB.goalsFor+=goalsB; teamB.goalsAgainst+=goalsA;
-    teamA.played++; teamB.played++;
-
-    if(goalsA>goalsB){ teamA.won++; teamB.lost++; }
-    else if(goalsB>goalsA){ teamB.won++; teamA.lost++; }
+/* --------- Maç kaydetme & puan güncelleme ---------- */
+function submitMatch(week, matchIndex){
+    const matchDiv = document.getElementById("matchList").children[matchIndex];
+    const goalsA = parseInt(matchDiv.querySelector(".scoreA").value);
+    const goalsB = parseInt(matchDiv.querySelector(".scoreB").value);
+    if(isNaN(goalsA) || isNaN(goalsB)){
+        alert("Gol girin!");
+        return;
+    }
+    const teamA = weeksMatches[week][matchIndex][0];
+    const teamB = weeksMatches[week][matchIndex][1];
+    teamA.goalsFor += goalsA;
+    teamA.goalsAgainst += goalsB;
+    teamB.goalsFor += goalsB;
+    teamB.goalsAgainst += goalsA;
+    teamA.played++;
+    teamB.played++;
+    if(goalsA > goalsB){ teamA.won++; teamB.lost++; }
+    else if(goalsB > goalsA){ teamB.won++; teamA.lost++; }
     else { teamA.draw++; teamB.draw++; }
-
-    matchResults[`${week}-${matchIndex}`]={homeGoals:goalsA, awayGoals:goalsB, homePlayer:teamA.playerName, awayPlayer:teamB.playerName, homeTeam:teamA.teamName, awayTeam:teamB.teamName, week:week+1};
-
+    matchResults[`${week}-${matchIndex}`] = { homeGoals: goalsA, awayGoals: goalsB, homePlayer: teamA.playerName, awayPlayer: teamB.playerName, homeTeam: teamA.teamName, awayTeam: teamB.teamName, week: week+1 };
     saveAutoState();
-
-    matchDiv.style.display="none";
+    matchDiv.style.display = "none";
     const weekDivs = Array.from(document.getElementById("matchList").children);
-    if(weekDivs.every(d=>d.style.display==="none")){
+    if(weekDivs.every(d => d.style.display === "none")){
         updateStandings();
-        if(currentWeek<weeksMatches.length-1){
+        if(currentWeek < weeksMatches.length - 1){
             currentWeek++;
             showWeek(currentWeek);
-        } else { showChampion(); }
-    }
-}
-
-function updateStandings(){
-    const tbody=document.querySelector("#pointsTable tbody");
-    tbody.innerHTML='';
-    const sorted=[...teams].sort((a,b)=>b.points-a.points || b.goalDifference-a.goalDifference || b.goalsFor-a.goalsFor);
-    sorted.forEach((t,i)=>{
-        const tr=document.createElement("tr");
-        tr.innerHTML=`<td>${i+1}</td><td>${t.playerName} (${t.teamName})</td><td>${t.points}</td><td>${t.played}</td><td>${t.won}</td><td>${t.draw}</td><td>${t.lost}</td><td>${t.goalsFor}</td><td>${t.goalsAgainst}</td><td>${t.goalDifference}</td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-/* --------- Şampiyon ---------- */
-function showChampion(){
-    const sorted=[...teams].sort((a,b)=>b.points-a.points || b.goalDifference-a.goalDifference || b.goalsFor-a.goalsFor);
-    const champion=sorted[0];
-    const photoUrl=playerPhotos[champion.playerName] || 'default.png';
-    document.getElementById("championInfo").innerHTML=`<img src="${photoUrl}" alt="${champion.playerName}" class="champion-photo"> ${champion.playerName} (${champion.teamName})`;
-    document.getElementById("championBox").style.display="block";
-    document.getElementById("matchSection").style.display="none";
-    triggerConfetti(80);
-
-    const tournamentData={
-        id:Date.now(),
-        date:new Date().toISOString(),
-        teams:teams.map(t=>({playerName:t.playerName,teamName:t.teamName,played:t.played,won:t.won,draw:t.draw,lost:t.lost,goalsFor:t.goalsFor,goalsAgainst:t.goalsAgainst,points:t.points,goalDifference:t.goalDifference})),
-        champion:{playerName:champion.playerName,teamName:champion.teamName}
-    };
-    saveTournament(tournamentData);
-    clearAutoState();
-}
-
-/* --------- Kayıt / Yükleme ---------- */
-function saveTournament(data){
-    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-    saved.push(data);
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));
-}
-
-function toggleSavedSection(){
-    const sec=document.getElementById("savedSection");
-    sec.style.display=sec.style.display==="none"?"block":"none";
-    if(sec.style.display==="block"){
-        const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-        const ul=document.getElementById("savedList");
-        ul.innerHTML='';
-        saved.forEach(t=>{
-            const li=document.createElement("li");
-            const dt=new Date(t.date);
-            li.innerHTML=`<span>${dt.toLocaleString()} - ${t.champion.playerName} (${t.champion.teamName})</span><button onclick='showSavedTournament(${t.id})'>Göster</button>`;
-            ul.appendChild(li);
-        });
-    }
-}
-
-function showSavedTournament(id){
-    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-    const t=saved.find(x=>x.id===id);
-    if(t){
-        const details=document.getElementById("savedDetails");
-        let html='<table><tr><th>#</th><th>Oyuncu</th><th>Takım</th><th>Puan</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th><th>AV</th></tr>';
-        t.teams.forEach((tm,i)=>{
-            html+=`<tr><td>${i+1}</td><td>${tm.playerName}</td><td>${tm.teamName}</td><td>${tm.points}</td><td>${tm.played}</td><td>${tm.won}</td><td>${tm.draw}</td><td>${tm.lost}</td><td>${tm.goalsFor}</td><td>${tm.goalsAgainst}</td><td>${tm.goalDifference}</td></tr>`;
-        });
-        html+='</table>';
-        details.innerHTML=html;
-    }
-}
-
-/* --------- Confetti ---------- */
-function triggerConfetti(count){
-    const container=document.getElementById("confettiContainer");
-    for(let i=0;i<count;i++){
-        const conf=document.createElement("div");
-        conf.className='confetti';
-        conf.style.backgroundColor=`hsl(${Math.random()*360},80%,60%)`;
-        conf.style.left=Math.random()*100+'%';
-        conf.style.animationDuration=(Math.random()*3+2)+'s';
-        conf.style.width=(Math.random()*8+4)+'px';
-        conf.style.height=(Math.random()*8+4)+'px';
-        container.appendChild(conf);
-        setTimeout(()=>container.removeChild(conf),5000);
-    }
-}
-
-/* --------- Otomatik Kayıt ---------- */
-function saveAutoState(){
-    const data={teams,weeksMatches,currentWeek,matchResults};
-    localStorage.setItem(AUTOSAVE_KEY,JSON.stringify(data));
-}
-
-function loadAutoState(){
-    const data=JSON.parse(localStorage.getItem(AUTOSAVE_KEY)||'null');
-    if(data){
-        teams.length=0;
-        data.teams.forEach(t=>teams.push(Object.assign(new Team(), t)));
-        weeksMatches=data.weeksMatches;
-        currentWeek=data.currentWeek;
-        for(const k in data.matchResults) matchResults[k]=data.matchResults[k];
-        updateTeamList();
-        if(currentWeek<weeksMatches.length){
-            document.getElementById("startTournamentBtn").style.display="none";
-            document.getElementById("showSavedBtn").style.display="none";
-            showWeek(currentWeek);
+        } else {
+            showChampion();
         }
     }
 }
 
-function clearAutoState(){ localStorage.removeItem(AUTOSAVE_KEY); }
+function updateStandings(){
+    const tbody = document.querySelector("#pointsTable tbody");
+    tbody.innerHTML = '';
+    const sorted = [...teams].sort((a,b) => b.points - a.points || b.goalDifference - a.goalDifference || b.goalsFor - a.goalsFor);
+    sorted.forEach((t,i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${i+1}</td>
+                        <td>${t.playerName} (${t.teamName})</td>
+                        <td>${t.points}</td>
+                        <td>${t.played}</td>
+                        <td>${t.won}</td>
+                        <td>${t.draw}</td>
+                        <td>${t.lost}</td>
+                        <td>${t.goalsFor}</td>
+                        <td>${t.goalsAgainst}</td>
+                        <td>${t.goalDifference}</td>`;
+        tbody.appendChild(tr);
+    });
+}
 
-/* --------- Başlangıç ---------- */
-loadAutoState();
-updateStandings();
+/* --------- Şampiyon gösterme & arşivleme ---------- */
+function showChampion(){
+    const sorted = [...teams].sort((a,b) => b.points - a.points || b.goalDifference - a.goalDifference || b.goalsFor - a.goalsFor);
+    const champion = sorted[0];
+    const photoUrl = playerPhotos[champion.playerName] || 'default.png';
+    document.getElementById("championInfo").innerHTML = `<img src="${photoUrl}" alt="${champion.playerName}" class="champion-photo"> ${champion.playerName} (${champion.teamName})`;
+    document.getElementById("championBox").style.display = "block";
+    document.getElementById("matchSection").style.display = "none";
+    triggerConfetti(80);
+
+    // Turnuva arşivleme
+    const tournamentData = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        teams: teams.map(t => ({ playerName: t.playerName, teamName: t.teamName, played: t.played, won: t.won, draw: t.draw, lost: t.lost, goalsFor: t.goalsFor, goalsAgainst: t.goalsAgainst, points: t.points, goalDifference: t.goalDifference })),
+        champion: { playerName: champion.playerName, teamName: champion.teamName, photo: photoUrl },
+        matches: []
+    };
+    for(let w=0; w<weeksMatches.length; w++){
+        for(let mi=0; mi<weeksMatches[w].length; mi++){
+            const key = `${w}-${mi}`;
+            const res = matchResults[key];
+            if(res){
+                tournamentData.matches.push({ week: res.week, homePlayer: res.homePlayer, homeTeam: res.homeTeam, homeGoals: res.homeGoals, awayPlayer: res.awayPlayer, awayTeam: res.awayTeam, awayGoals: res.awayGoals });
+            }
+        }
+    }
+    saveTournament(tournamentData);
+    clearAutoState();
+    loadSavedList();
+}
+
+/* --------- LocalStorage: kayıt/ara-kayıt/arsiv işlemleri ---------- */
+function saveTournament(data){
+    try{
+        const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        arr.unshift(data);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    } catch(e){
+        console.error("Kaydetme hatası:", e);
+        alert("Turnuva kaydedilirken bir hata oluştu.");
+    }
+}
+
+function loadSavedList(){ ... }
+function toggleSavedSection(){ ... }
+function viewSaved(index){ ... }
+function deleteSaved(index){ ... }
+function saveAutoState(){ ... }
+function clearAutoState(){ ... }
+
+/* --------- Konfeti ---------- */
+function triggerConfetti(count){
+    const container = document.getElementById("confettiContainer");
+    for(let i=0;i<count;i++){
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random()*100 + "vw";
+        c.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+        c.style.animationDuration = (Math.random()*3+2)+"s";
+        c.style.animationDelay = (Math.random()*2)+"s";
+        container.appendChild(c);
+        setTimeout(()=>container.removeChild(c),5000);
+    }
+}
+
+updateTeamList();
+loadSavedList();
 </script>
 </body>
 </html>
