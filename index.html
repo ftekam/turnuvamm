@@ -40,6 +40,11 @@
     .saved-list { list-style:none; padding-left:0; }
     .saved-list li { padding:8px; border-bottom:1px solid #666; display:flex; justify-content:space-between; align-items:center; }
     .saved-list .meta { display:flex; align-items:center; gap:10px; }
+/* Eski turnuvalar kısmındaki maç sonuçlarının yazı boyutunu küçültür */
+#savedDetails ul li {
+    font-size: 14px;   /* normalde 16px'ti, bunu 14px yaptık */
+    line-height: 1.4;  /* satırlar arası boşluk biraz dar */
+}
 
     .confetti-container { position: fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; overflow:visible; z-index:9999; }
     .confetti { position:absolute; width:10px; height:14px; opacity:0.9; transform-origin:center; will-change:transform, top; animation: fall linear forwards; }
@@ -549,3 +554,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
